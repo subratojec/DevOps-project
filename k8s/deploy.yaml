@@ -24,6 +24,7 @@ spec:
       containers: 
       - name: flask-pod
         image: subrato123/flask-pod 
+        imagePullPolicy: Always
         resources:
           requests:
             memory: "64Mi"
