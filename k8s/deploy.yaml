@@ -23,7 +23,7 @@ spec:
     spec:
       containers: 
       - name: flask-pod
-        image: subrato123/flask-pod 
+        image: subrato123/flask-pod:latest
         imagePullPolicy: Always
         resources:
           requests:
