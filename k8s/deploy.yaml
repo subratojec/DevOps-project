@@ -49,6 +49,7 @@ spec:
     app: flask-pod
   ports:  
     - protocol: TCP 
+      port: 80
       targetPort: 5000
       nodePort: 30443
   type: NodePort
