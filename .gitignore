@@ -1,0 +1,14 @@
+# Terraform local files & dependencies
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Python virtual environment & cache
+venv/
+__pycache__/
+
+# IDE folders
+.vscode/
+.idea/

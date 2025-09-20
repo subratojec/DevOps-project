@@ -1,0 +1,17 @@
+# Python virtual environment
+venv/
+
+# Python cache
+__pycache__/
+
+# Infrastructure and CI/CD configuration
+k8s/
+terraform/
+Jenkinsfile
+
+# Git directory (best practice)
+.git
+
+# Local IDE/editor configuration (best practice)
+.vscode/
+.idea/

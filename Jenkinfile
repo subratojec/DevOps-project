@@ -1,0 +1,51 @@
+pipeline {
+    agent none
+
+    environment {
+        DOCKER_IMAGE = "subrato123/flask-pod"
+    }
+
+    stages {
+        stage('Build & Push Docker Image') {
+            agent { label 'build-node-1' }
+            steps {
+                checkout scm
+
+                script {
+                    // Use Docker Hub credentials stored in Jenkins
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerHub',
+                        usernameVariable: 'DOCKERHUB_USER',
+                        passwordVariable: 'DOCKERHUB_PASS'
+                    )]) {
+                        sh """
+                            docker build -t ${DOCKER_IMAGE} .
+                            docker login -u "${DOCKERHUB_USER}" -p "${DOCKERHUB_PASS}"
+                            docker push ${DOCKER_IMAGE}
+                            docker logout
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Minikube') {
+            agent { label 'deploy-node-1' }
+            steps {
+                checkout scm
+
+                script {
+                    // Use the kubeconfig file credential to securely connect to the cluster
+                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_FILE')]) {
+                        sh """
+                            export KUBECONFIG="\${KUBECONFIG_FILE}"
+                            
+                            echo "--- Applying Kubernetes Deployment ---"
+                            kubectl apply -f k8s/deploy.yaml
+                        """
+                    }
+                }
+            }
+        }
+    }
+}

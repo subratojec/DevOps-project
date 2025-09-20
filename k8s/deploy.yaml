@@ -1,0 +1,54 @@
+#namespace 
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flask-pod 
+
+---
+# Deployment 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-pod-deployment
+  namespace: flask-pod
+spec: 
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-pod
+  template:
+    metadata:
+      labels: 
+        app: flask-pod
+    spec:
+      containers: 
+      - name: flask-pod
+        image: subrato123/flask-pod 
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - name: web
+          containerPort: 5000
+
+---
+
+#Service
+
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: flask-pod-service
+  namespace: flask-pod
+spec:
+  selector:
+    app: flask-pod
+  ports:  
+    - protocol: TCP 
+      targetPort: 5000
+      nodePort: 30443
+  type: NodePort
