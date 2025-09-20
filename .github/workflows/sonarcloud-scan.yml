@@ -1,0 +1,24 @@
+name: Sonar Cloud Code Test
+
+on:
+  push:
+    branches:
+      - development # Runs on pushes to development
+  pull_request:
+    types: [opened, synchronize, reopened] # Also runs on pull requests
+
+jobs:
+  sonarcloud:
+    name: SonarCloud Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Disabling shallow clones is important for a more accurate SonarCloud analysis
+          fetch-depth: 0
+      - name: SonarCloud Scan
+        uses: SonarSource/sonar-scan-action@master # Using master is common for Sonar
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
